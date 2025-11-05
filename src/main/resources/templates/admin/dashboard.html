@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Admin Dashboard'"></head>
+<body class="bg-light">
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="bg-dark text-white p-3" style="min-height: 100vh; min-width: 250px;">
+        <h4 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Panel</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-white active" href="/admin">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/admin/categories">
+                    <i class="bi bi-tags"></i> Danh mục
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/admin/books">
+                    <i class="bi bi-book"></i> Sách
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/admin/customers">
+                    <i class="bi bi-people"></i> Khách hàng
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/admin/orders">
+                    <i class="bi bi-bag-check"></i> Đơn hàng
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-white" href="/">
+                    <i class="bi bi-arrow-left"></i> Về trang chủ
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4">
+        <h2 class="mb-4">Dashboard</h2>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h6 class="card-title">Tổng sách</h6>
+                        <h2 th:text="${totalBooks}">0</h2>
+                        <small>Sách trong kho</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h6 class="card-title">Doanh thu</h6>
+                        <h2 th:text="${#numbers.formatDecimal(totalRevenue, 0, 0)} + 'đ'">0đ</h2>
+                        <small>Tổng doanh thu</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h6 class="card-title">Khách hàng</h6>
+                        <h2 th:text="${totalCustomers}">0</h2>
+                        <small>Tổng khách hàng</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h6 class="card-title">Đơn chờ</h6>
+                        <h2 th:text="${pendingOrders}">0</h2>
+                        <small>Đơn hàng chờ xử lý</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Đơn hàng gần đây</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày đặt</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${recentOrders}">
+                        <td th:text="${order.orderNumber}">ORD001</td>
+                        <td th:text="${order.user.fullName}">Customer</td>
+                        <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 0)} + 'đ'">100000đ</td>
+                        <td>
+                                    <span class="badge"
+                                          th:classappend="${order.status == 'PENDING'} ? 'bg-warning' :
+                                                          (${order.status == 'DELIVERED'} ? 'bg-success' : 'bg-info')"
+                                          th:text="${order.status}">PENDING</span>
+                        </td>
+                        <td th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2025</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>

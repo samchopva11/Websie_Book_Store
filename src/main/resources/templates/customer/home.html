@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Trang chủ - BookHaven'"></head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navigation"></div>
+
+<!-- Flash Messages -->
+<div th:replace="layout/header :: messages"></div>
+
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="badge bg-warning text-dark mb-3">Sách mới</span>
+                <h1 class="display-4 fw-bold mb-3">Khám phá cuốn sách hay tiếp theo</h1>
+                <p class="lead mb-4">Hàng ngàn đầu sách thuộc mọi thể loại. Miễn phí ship cho đơn hàng trên 500.000đ</p>
+                <a href="/books" class="btn btn-light btn-lg">Mua sắm ngay</a>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1588580000645-4562a6d2c839?w=600"
+                     alt="Books" class="img-fluid rounded shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Books -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Sách mới nhất</h2>
+            <a href="/books?new=true" class="btn btn-outline-primary">Xem tất cả</a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" th:each="book : ${latestBooks}">
+                <div class="card book-card h-100">
+                    <div class="position-relative">
+                        <img th:src="${book.imageUrl}" class="card-img-top" alt="Book"
+                             style="height: 300px; object-fit: cover;">
+                        <span class="badge bestseller-badge position-absolute top-0 start-0 m-2"
+                              th:if="${book.isBestseller}">Bestseller</span>
+                        <span class="badge discount-badge position-absolute top-0 end-0 m-2"
+                              th:if="${book.discountPercent > 0}" th:text="'-' + ${book.discountPercent} + '%'"></span>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2" th:text="${book.category.name}">Category</span>
+                        <h5 class="card-title" th:text="${book.title}">Book Title</h5>
+                        <p class="text-muted mb-2" th:text="${book.author}">Author</p>
+                        <div class="mb-2">
+                            <i class="bi bi-star-fill text-warning" th:each="i : ${#numbers.sequence(1, book.rating)}"></i>
+                            <span class="text-muted ms-1" th:text="'(' + ${book.rating} + ')'"></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                    <span class="text-success fw-bold fs-5"
+                                          th:text="${#numbers.formatDecimal(book.price, 0, 0)} + 'đ'">299000đ</span>
+                                <del class="text-muted ms-2" th:if="${book.originalPrice != null}"
+                                     th:text="${#numbers.formatDecimal(book.originalPrice, 0, 0)} + 'đ'"></del>
+                            </div>
+                        </div>
+                        <a th:href="@{/books/{id}(id=${book.id})}" class="btn btn-primary w-100 mt-3">
+                            <i class="bi bi-cart-plus"></i> Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bestsellers -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Sách bán chạy</h2>
+            <a href="/books?bestseller=true" class="btn btn-outline-primary">Xem tất cả</a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" th:each="book : ${bestsellerBooks}">
+                <!-- Same card structure as above -->
+                <div class="card book-card h-100">
+                    <!-- ... card content ... -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>BookHaven</h5>
+                <p class="text-muted">Điểm đến của bạn cho việc khám phá và mua sách từ mọi thể loại.</p>
+            </div>
+            <div class="col-md-3">
+                <h6>Mua sắm</h6>
+                <ul class="list-unstyled text-muted">
+                    <li>Bestsellers</li>
+                    <li>Sách mới</li>
+                    <li>Tiểu thuyết</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6>Hỗ trợ khách hàng</h6>
+                <ul class="list-unstyled text-muted">
+                    <li>Liên hệ</li>
+                    <li>Vận chuyển</li>
+                    <li>Đổi trả</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6>Về chúng tôi</h6>
+                <ul class="list-unstyled text-muted">
+                    <li>Câu chuyện</li>
+                    <li>Chính sách</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="border-secondary my-4">
+        <p class="text-center text-muted mb-0">© 2025 BookHaven. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>

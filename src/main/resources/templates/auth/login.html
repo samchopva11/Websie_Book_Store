@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Đăng nhập'"></head>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-book display-4 text-primary"></i>
+                        <h3 class="mt-2">BookHaven</h3>
+                        <p class="text-muted">Đăng nhập vào tài khoản</p>
+                    </div>
+
+                    <div th:replace="layout/header :: messages"></div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>
