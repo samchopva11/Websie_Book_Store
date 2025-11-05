@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Admin Sidebar Fragment -->
+<div th:fragment="sidebar" class="bg-dark text-white d-flex flex-column" style="min-height: 100vh; width: 260px; position: fixed; left: 0; top: 0;">
+    <!-- Brand -->
+    <div class="p-4 border-bottom border-secondary">
+        <h4 class="mb-0">
+            <i class="bi bi-speedometer2 me-2"></i>
+            <span>Admin Panel</span>
+        </h4>
+        <small class="text-muted">BookHaven Management</small>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow-1 p-3">
+        <ul class="nav flex-column">
+            <!-- Dashboard -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded"
+                   href="/admin"
+                   th:classappend="${#strings.equals(#httpServletRequest.requestURI, '/admin')} ? 'bg-primary' : ''">
+                    <i class="bi bi-house-door me-3"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Categories -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded"
+                   href="/admin/categories"
+                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/categories')} ? 'bg-primary' : ''">
+                    <i class="bi bi-tags me-3"></i>
+                    <span>Danh mục</span>
+                </a>
+            </li>
+
+            <!-- Books -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded"
+                   href="/admin/books"
+                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/books')} ? 'bg-primary' : ''">
+                    <i class="bi bi-book me-3"></i>
+                    <span>Sách</span>
+                </a>
+            </li>
+
+            <!-- Customers -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded"
+                   href="/admin/customers"
+                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/customers')} ? 'bg-primary' : ''">
+                    <i class="bi bi-people me-3"></i>
+                    <span>Khách hàng</span>
+                </a>
+            </li>
+
+            <!-- Orders -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded"
+                   href="/admin/orders"
+                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/orders')} ? 'bg-primary' : ''">
+                    <i class="bi bi-bag-check me-3"></i>
+                    <span>Đơn hàng</span>
+                </a>
+            </li>
+
+            <hr class="border-secondary my-3">
+
+            <!-- Back to Website -->
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white d-flex align-items-center p-2 rounded" href="/">
+                    <i class="bi bi-arrow-left me-3"></i>
+                    <span>Về trang chủ</span>
+                </a>
+            </li>
+
+            <!-- Logout -->
+            <li class="nav-item">
+                <a class="nav-link text-danger d-flex align-items-center p-2 rounded" href="/logout">
+                    <i class="bi bi-box-arrow-right me-3"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- User Info -->
+    <div class="p-3 border-top border-secondary" th:if="${session.user != null}">
+        <div class="d-flex align-items-center">
+            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                 style="width: 40px; height: 40px;">
+                <i class="bi bi-person-fill fs-5"></i>
+            </div>
+            <div class="ms-3">
+                <div class="fw-bold" th:text="${session.user.fullName}">Admin</div>
+                <small class="text-muted" th:text="${session.user.email}">admin@bookstore.com</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

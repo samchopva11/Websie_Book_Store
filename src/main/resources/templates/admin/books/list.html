@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Quản lý sách - Admin'"></head>
+<body class="bg-light">
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div th:replace="layout/admin-sidebar :: sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1" style="margin-left: 260px;">
+        <div class="p-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-book"></i> Quản lý sách</h2>
+                <a href="/admin/books/new" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Thêm sách
+                </a>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:replace="layout/header :: messages"></div>
+
+            <!-- Filters -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form action="/admin/books" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text"
+                                   class="form-control"
+                                   name="search"
+                                   placeholder="Tìm kiếm sách..."
+                                   th:value="${searchKeyword}">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" name="categoryId">
+                                <option value="">Tất cả danh mục</option>
+                                <option th:each="cat : ${categories}"
+                                        th:value="${cat.id}"
+                                        th:text="${cat.name}"
+                                        th:selected="${currentCategory == cat.id}">
+                                    Category
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search"></i> Tìm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Books Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th width="80">Ảnh</th>
+                                <th>Tên sách</th>
+                                <th>Tác giả</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th width="150">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="book : ${booksPage.content}">
+                                <td th:text="${book.id}">1</td>
+                                <td>
+                                    <img th:src="${book.imageUrl}"
+                                         alt="Book"
+                                         class="rounded"
+                                         style="width: 50px; height: 65px; object-fit: cover;">
+                                </td>
+                                <td>
+                                    <strong th:text="${book.title}">Book Title</strong>
+                                    <div>
+                                                <span class="badge bestseller-badge" th:if="${book.isBestseller}">
+                                                    <i class="bi bi-star-fill"></i> Bestseller
+                                                </span>
+                                        <span class="badge bg-success" th:if="${book.isNew}">
+                                                    <i class="bi bi-fire"></i> Mới
+                                                </span>
+                                    </div>
+                                </td>
+                                <td th:text="${book.author}">Author</td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${book.category.name}">Category</span>
+                                </td>
+                                <td>
+                                    <strong class="text-success"
+                                            th:text="${#numbers.formatDecimal(book.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                        299,000đ
+                                    </strong>
+                                    <br>
+                                    <del class="text-muted small"
+                                         th:if="${book.originalPrice != null}"
+                                         th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                        399,000đ
+                                    </del>
+                                </td>
+                                <td>
+                                            <span th:if="${book.stock > 10}" class="badge bg-success">
+                                                <span th:text="${book.stock}">50</span>
+                                            </span>
+                                    <span th:if="${book.stock > 0 and book.stock <= 10}" class="badge bg-warning">
+                                                <span th:text="${book.stock}">5</span>
+                                            </span>
+                                    <span th:if="${book.stock == 0}" class="badge bg-danger">
+                                                Hết hàng
+                                            </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}"
+                                       class="btn btn-sm btn-warning me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form th:action="@{/admin/books/delete/{id}(id=${book.id})}"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc muốn xóa sách này?')">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation" th:if="${booksPage.totalPages > 1}">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item" th:classappend="${booksPage.first} ? 'disabled' : ''">
+                                <a class="page-link"
+                                   th:href="@{/admin/books(page=${booksPage.number - 1}, categoryId=${currentCategory}, search=${searchKeyword})}">
+                                    Trước
+                                </a>
+                            </li>
+
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, booksPage.totalPages - 1)}"
+                                th:if="${i >= booksPage.number - 2 and i <= booksPage.number + 2}"
+                                th:classappend="${i == booksPage.number} ? 'active' : ''">
+                                <a class="page-link"
+                                   th:href="@{/admin/books(page=${i}, categoryId=${currentCategory}, search=${searchKeyword})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${booksPage.last} ? 'disabled' : ''">
+                                <a class="page-link"
+                                   th:href="@{/admin/books(page=${booksPage.number + 1}, categoryId=${currentCategory}, search=${searchKeyword})}">
+                                    Sau
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>

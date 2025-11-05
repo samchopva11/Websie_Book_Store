@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title=${isEdit ? 'Chỉnh sửa danh mục' : 'Thêm danh mục'} + ' - Admin'"></head>
+<body class="bg-light">
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div th:replace="layout/admin-sidebar :: sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1" style="margin-left: 260px;">
+        <div class="p-4">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="bi bi-tags"></i>
+                    <span th:text="${isEdit ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}">Thêm danh mục</span>
+                </h2>
+                <a href="/admin/categories" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:replace="layout/header :: messages"></div>
+
+            <!-- Form -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form th:action="@{/admin/categories/save}"
+                                  method="post"
+                                  th:object="${category}">
+
+                                <input type="hidden" th:field="*{id}">
+
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">
+                                        Tên danh mục <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="name"
+                                           th:field="*{name}"
+                                           placeholder="Ví dụ: Tiểu thuyết, Khoa học..."
+                                           required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Mô tả</label>
+                                    <textarea class="form-control"
+                                              id="description"
+                                              th:field="*{description}"
+                                              rows="4"
+                                              placeholder="Mô tả về danh mục..."></textarea>
+                                </div>
+
+                                <hr>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save"></i> Lưu
+                                    </button>
+                                    <a href="/admin/categories" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle"></i> Hủy
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6><i class="bi bi-info-circle"></i> Hướng dẫn</h6>
+                            <ul class="small mb-0">
+                                <li>Tên danh mục phải là duy nhất</li>
+                                <li>Mô tả giúp người dùng hiểu rõ hơn về danh mục</li>
+                                <li>Không thể xóa danh mục đã có sách</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>
