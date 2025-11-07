@@ -33,6 +33,9 @@ public class Order {
     @Column(name = "shipping_fee", precision = 10, scale = 2)
     private BigDecimal shippingFee = BigDecimal.ZERO;
 
+    @Column(name = "grand_total", nullable = false, precision = 10, scale = 2)
+    private BigDecimal grandTotal;
+
     @Column(nullable = false, length = 20)
     private String status = "PENDING"; // PENDING, CONFIRMED, SHIPPING, DELIVERED, CANCELLED
 
@@ -71,9 +74,5 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    // Helper method to calculate grand total
-    @Transient
-    public BigDecimal getGrandTotal() {
-        return totalAmount.add(shippingFee);
-    }
+
 }

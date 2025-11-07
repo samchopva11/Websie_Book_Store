@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Đơn hàng của tôi - BookHaven'"></head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navigation"></div>
+
+<!-- Flash Messages -->
+<div th:replace="layout/header :: messages"></div>
+
+<!-- Breadcrumb -->
+<section class="bg-light py-3">
+    <div class="container">
+        <h2>Đơn hàng của tôi</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Đơn hàng</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Orders Content -->
+<section class="py-5">
+    <div class="container">
+        <div th:if="${#lists.isEmpty(orders)}">
+            <!-- No Orders -->
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h3 class="mt-4">Bạn chưa có đơn hàng nào</h3>
+                <p class="text-muted">Hãy khám phá và đặt hàng những cuốn sách yêu thích!</p>
+                <a href="/books" class="btn btn-primary mt-3">
+                    <i class="bi bi-book"></i> Mua sắm ngay
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(orders)}">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Orders List -->
+                    <div class="card" th:each="order : ${orders}">
+                        <div class="card-header bg-light">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <small class="text-muted">Mã đơn hàng</small>
+                                    <div>
+                                        <strong th:text="${order.orderNumber}">ORD001</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted">Ngày đặt</small>
+                                    <div th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                        01/01/2025 10:00
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted">Tổng tiền</small>
+                                    <div>
+                                        <strong class="text-success"
+                                                th:text="${#numbers.formatDecimal(order.grandTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                            500,000đ
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted">Trạng thái</small>
+                                    <div>
+                                            <span class="badge"
+                                                  th:classappend="${order.status == 'PENDING'} ? 'bg-warning text-dark' :
+                                                                  (${order.status == 'CONFIRMED'} ? 'bg-info' :
+                                                                  (${order.status == 'SHIPPING'} ? 'bg-primary' :
+                                                                  (${order.status == 'DELIVERED'} ? 'bg-success' : 'bg-danger')))"
+                                                  th:text="${order.status == 'PENDING'} ? 'Chờ xử lý' :
+                                                           (${order.status == 'CONFIRMED'} ? 'Đã xác nhận' :
+                                                           (${order.status == 'SHIPPING'} ? 'Đang giao' :
+                                                           (${order.status == 'DELIVERED'} ? 'Đã giao' : 'Đã hủy')))">
+                                                PENDING
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Order Items -->
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex mb-2" th:each="item : ${order.orderItems}">
+                                        <div class="flex-shrink-0 me-3">
+                                            <img th:if="${item.book != null}"
+                                                 th:src="${item.book.imageUrl}"
+                                                 alt="Book"
+                                                 class="rounded"
+                                                 style="width: 50px; height: 65px; object-fit: cover;">
+                                            <div th:if="${item.book == null}"
+                                                 class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                                 style="width: 50px; height: 65px;">
+                                                <i class="bi bi-book text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1" th:text="${item.bookTitle}">Book Title</h6>
+                                            <small class="text-muted">
+                                                Số lượng: <span th:text="${item.quantity}">1</span> x
+                                                <span th:text="${#numbers.formatDecimal(item.bookPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                                        299,000đ
+                                                    </span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <a th:href="@{/orders/{id}(id=${order.id})}"
+                                       class="btn btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- Scripts -->
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>

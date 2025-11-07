@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header" th:with="title='Đặt hàng thành công - BookHaven'"></head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navigation"></div>
+
+<!-- Flash Messages -->
+<div th:replace="layout/header :: messages"></div>
+
+<!-- Success Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body text-center p-5">
+                        <!-- Success Icon -->
+                        <div class="mb-4">
+                            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center"
+                                 style="width: 100px; height: 100px;">
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 60px;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Success Message -->
+                        <h2 class="mb-3">Đặt hàng thành công!</h2>
+                        <p class="text-muted fs-5 mb-4">
+                            Cảm ơn bạn đã đặt hàng tại BookHaven.
+                            Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
+                        </p>
+
+                        <!-- Order Info -->
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Vui lòng kiểm tra email để xem chi tiết đơn hàng.
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="/orders" class="btn btn-primary btn-lg px-5">
+                                <i class="bi bi-list-check"></i> Xem đơn hàng của tôi
+                            </a>
+                            <a href="/" class="btn btn-outline-primary btn-lg px-5">
+                                <i class="bi bi-house"></i> Về trang chủ
+                            </a>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="mt-5 pt-4 border-top">
+                            <div class="row text-start">
+                                <div class="col-md-4 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-truck fs-4 text-primary me-3"></i>
+                                        <div>
+                                            <h6>Giao hàng nhanh</h6>
+                                            <small class="text-muted">2-3 ngày làm việc</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-shield-check fs-4 text-success me-3"></i>
+                                        <div>
+                                            <h6>Đảm bảo chất lượng</h6>
+                                            <small class="text-muted">Hàng chính hãng 100%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-headset fs-4 text-info me-3"></i>
+                                        <div>
+                                            <h6>Hỗ trợ 24/7</h6>
+                                            <small class="text-muted">Hotline: 1900-xxxx</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- Scripts -->
+<div th:replace="layout/header :: scripts"></div>
+</body>
+</html>

@@ -86,84 +86,87 @@
                 <!-- Books Grid -->
                 <div class="row g-4">
                     <div class="col-md-4" th:each="book : ${booksPage.content}">
-                        <div class="card book-card h-100">
-                            <div class="position-relative">
-                                <img th:src="${book.imageUrl}"
-                                     class="card-img-top"
-                                     alt="Book Cover"
-                                     style="height: 300px; object-fit: cover;">
+                        <a th:href="@{/books/{id}(id=${book.id})}" style="text-decoration: none">
+                            <div class="card book-card h-100">
+                                <div class="position-relative">
+                                    <img th:src="${book.imageUrl}"
+                                         class="card-img-top"
+                                         alt="Book Cover"
+                                         style="height: 300px; object-fit: cover;">
 
-                                <!-- Badges -->
-                                <span class="badge bestseller-badge position-absolute top-0 start-0 m-2"
-                                      th:if="${book.isBestseller}">
+                                    <!-- Badges -->
+                                    <span class="badge bestseller-badge position-absolute top-0 start-0 m-2"
+                                          th:if="${book.isBestseller}">
                                         <i class="bi bi-star-fill"></i> Bestseller
                                     </span>
-                                <span class="badge bg-success position-absolute top-0 start-0 m-2"
-                                      th:if="${book.isNew}"
-                                      th:style="${book.isBestseller} ? 'margin-top: 2.5rem !important' : ''">
+                                    <span class="badge bg-success position-absolute top-0 start-0 m-2"
+                                          th:if="${book.isNew}"
+                                          th:style="${book.isBestseller} ? 'margin-top: 2.5rem !important' : ''">
                                         <i class="bi bi-fire"></i> Mới
                                     </span>
-                                <span class="badge discount-badge position-absolute top-0 end-0 m-2"
-                                      th:if="${book.discountPercent > 0}"
-                                      th:text="'-' + ${book.discountPercent} + '%'">
+                                    <span class="badge discount-badge position-absolute top-0 end-0 m-2"
+                                          th:if="${book.discountPercent > 0}"
+                                          th:text="'-' + ${book.discountPercent} + '%'">
                                         -20%
                                     </span>
-                            </div>
+                                </div>
 
-                            <div class="card-body">
+                                <div class="card-body">
                                     <span class="badge bg-secondary mb-2"
                                           th:text="${book.category.name}">Category</span>
 
-                                <h5 class="card-title" th:text="${book.title}">Book Title</h5>
-                                <p class="text-muted mb-2">
-                                    <i class="bi bi-person"></i>
-                                    <span th:text="${book.author}">Author</span>
-                                </p>
+                                    <h5 class="card-title" th:text="${book.title}">Book Title</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="bi bi-person"></i>
+                                        <span th:text="${book.author}">Author</span>
+                                    </p>
 
-                                <!-- Rating -->
-                                <div class="mb-2">
+                                    <!-- Rating -->
+                                    <div class="mb-2">
                                         <span th:each="i : ${#numbers.sequence(1, 5)}">
                                             <i class="bi"
                                                th:classappend="${i <= book.rating} ? 'bi-star-fill text-warning' : 'bi-star text-muted'"></i>
                                         </span>
-                                    <span class="text-muted ms-1"
-                                          th:text="'(' + ${#numbers.formatDecimal(book.rating, 1, 1)} + ')'">
+                                        <span class="text-muted ms-1"
+                                              th:text="'(' + ${#numbers.formatDecimal(book.rating, 1, 1)} + ')'">
                                             (4.5)
                                         </span>
-                                </div>
+                                    </div>
 
-                                <!-- Price -->
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div>
+                                    <!-- Price -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
                                             <span class="text-success fw-bold fs-5"
                                                   th:text="${#numbers.formatDecimal(book.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">
                                                 299,000đ
                                             </span>
-                                        <del class="text-muted ms-2"
-                                             th:if="${book.originalPrice != null}"
-                                             th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
-                                            399,000đ
-                                        </del>
+                                            <del class="text-muted ms-2"
+                                                 th:if="${book.originalPrice != null}"
+                                                 th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                                399,000đ
+                                            </del>
+                                        </div>
                                     </div>
+
+                                    <!-- Stock -->
+                                    <p class="mb-3" th:if="${book.stock > 0}">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                        <small class="text-success">Còn <span th:text="${book.stock}">50</span> sản phẩm</small>
+                                    </p>
+                                    <p class="mb-3" th:if="${book.stock <= 0}">
+                                        <i class="bi bi-x-circle text-danger"></i>
+                                        <small class="text-danger">Hết hàng</small>
+                                    </p>
+
+                                    <!-- Actions -->
+                                    <a th:href="@{/books/{id}(id=${book.id})}"
+                                       class="btn btn-primary w-100">
+                                        <i class="bi bi-eye"></i> Xem chi tiết
+                                    </a>
                                 </div>
-
-                                <!-- Stock -->
-                                <p class="mb-3" th:if="${book.stock > 0}">
-                                    <i class="bi bi-check-circle text-success"></i>
-                                    <small class="text-success">Còn <span th:text="${book.stock}">50</span> sản phẩm</small>
-                                </p>
-                                <p class="mb-3" th:if="${book.stock <= 0}">
-                                    <i class="bi bi-x-circle text-danger"></i>
-                                    <small class="text-danger">Hết hàng</small>
-                                </p>
-
-                                <!-- Actions -->
-                                <a th:href="@{/books/{id}(id=${book.id})}"
-                                   class="btn btn-primary w-100">
-                                    <i class="bi bi-eye"></i> Xem chi tiết
-                                </a>
                             </div>
-                        </div>
+                        </a>
+
                     </div>
                 </div>
 

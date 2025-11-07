@@ -20,7 +20,7 @@
             <li class="nav-item mb-2">
                 <a class="nav-link text-white d-flex align-items-center p-2 rounded"
                    href="/admin"
-                   th:classappend="${#strings.equals(#httpServletRequest.requestURI, '/admin')} ? 'bg-primary' : ''">
+                   th:classappend="${#strings.equals((#httpServletRequest != null ? #httpServletRequest.requestURI : ''), '/admin')} ? 'bg-primary' : ''">
                     <i class="bi bi-house-door me-3"></i>
                     <span>Dashboard</span>
                 </a>
@@ -30,7 +30,7 @@
             <li class="nav-item mb-2">
                 <a class="nav-link text-white d-flex align-items-center p-2 rounded"
                    href="/admin/categories"
-                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/categories')} ? 'bg-primary' : ''">
+                   th:classappend="${#strings.contains((#httpServletRequest != null ? #httpServletRequest.requestURI : ''), '/admin/categories')} ? 'bg-primary' : ''">
                     <i class="bi bi-tags me-3"></i>
                     <span>Danh mục</span>
                 </a>
@@ -40,7 +40,7 @@
             <li class="nav-item mb-2">
                 <a class="nav-link text-white d-flex align-items-center p-2 rounded"
                    href="/admin/books"
-                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/books')} ? 'bg-primary' : ''">
+                   th:classappend="${#strings.contains((#httpServletRequest != null ? #httpServletRequest.requestURI : ''), '/admin/books')} ? 'bg-primary' : ''">
                     <i class="bi bi-book me-3"></i>
                     <span>Sách</span>
                 </a>
@@ -50,7 +50,7 @@
             <li class="nav-item mb-2">
                 <a class="nav-link text-white d-flex align-items-center p-2 rounded"
                    href="/admin/customers"
-                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/customers')} ? 'bg-primary' : ''">
+                   th:classappend="${#strings.contains((#httpServletRequest != null ? #httpServletRequest.requestURI : ''), '/admin/customers')} ? 'bg-primary' : ''">
                     <i class="bi bi-people me-3"></i>
                     <span>Khách hàng</span>
                 </a>
@@ -60,7 +60,7 @@
             <li class="nav-item mb-2">
                 <a class="nav-link text-white d-flex align-items-center p-2 rounded"
                    href="/admin/orders"
-                   th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/orders')} ? 'bg-primary' : ''">
+                   th:classappend="${#strings.contains((#httpServletRequest != null ? #httpServletRequest.requestURI : ''), '/admin/orders')} ? 'bg-primary' : ''">
                     <i class="bi bi-bag-check me-3"></i>
                     <span>Đơn hàng</span>
                 </a>

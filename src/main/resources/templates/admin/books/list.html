@@ -59,13 +59,13 @@
                             <thead class="table-light">
                             <tr>
                                 <th>ID</th>
-                                <th width="80">Ảnh</th>
+                                <th style= "width=80">Ảnh</th>
                                 <th>Tên sách</th>
                                 <th>Tác giả</th>
                                 <th>Danh mục</th>
                                 <th>Giá</th>
                                 <th>Tồn kho</th>
-                                <th width="150">Thao tác</th>
+                                <th style= "width=150">Thao tác</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,9 +81,9 @@
                                     <strong th:text="${book.title}">Book Title</strong>
                                     <div>
                                                 <span class="badge bestseller-badge" th:if="${book.isBestseller}">
-                                                    <i class="bi bi-star-fill"></i> Bestseller
+                                                    <i class="bi bi-star-fill"></i> Sách bán chạy
                                                 </span>
-                                        <span class="badge bg-success" th:if="${book.isNew}">
+                                                <span class="badge bg-success" th:if="${book.isNew}">
                                                     <i class="bi bi-fire"></i> Mới
                                                 </span>
                                     </div>

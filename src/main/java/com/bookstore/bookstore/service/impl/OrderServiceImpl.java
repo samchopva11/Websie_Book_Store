@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng: " + orderNumber));
     }
 
+
     @Override
     public Order save(Order order) {
         return orderRepository.save(order);
@@ -73,11 +74,16 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(total);
 
         // Set shipping fee (free if > 500k VND)
+        BigDecimal shippingFee;
         if (total.compareTo(BigDecimal.valueOf(500000)) >= 0) {
-            order.setShippingFee(BigDecimal.ZERO);
+            shippingFee = BigDecimal.ZERO;
         } else {
-            order.setShippingFee(BigDecimal.valueOf(30000));
+            shippingFee = BigDecimal.valueOf(30000);
         }
+        order.setShippingFee(shippingFee);
+
+
+        order.setGrandTotal(total.add(shippingFee));
 
         // Set bi-directional relationship
         for (OrderItem item : order.getOrderItems()) {
@@ -97,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<Order> findOrdersByUser(Long userId) {
-        return orderRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        return orderRepository.findByUserId(userId);
     }
 
     @Override
