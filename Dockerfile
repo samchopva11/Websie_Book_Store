@@ -18,6 +18,6 @@ COPY --from=build /app/target/bookstore-0.0.1-SNAPSHOT.jar app.jar
 
 # Mở cổng
 EXPOSE 8080
-
+EXPOSE ${PORT}
 # Chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java -jar target/bookstore-0.0.1-SNAPSHOT.jar --server.port=${PORT}"]
