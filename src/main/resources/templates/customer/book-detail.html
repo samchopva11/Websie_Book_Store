@@ -29,10 +29,26 @@
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <div class="card border-0 shadow">
                     <div class="position-relative">
-                        <img th:src="${book.imageUrl}"
-                             class="card-img-top"
-                             alt="Book Cover"
-                             style="height: 600px; object-fit: cover;">
+
+                        <!-- *** PHẦN HIỂN THỊ ẢNH ĐÃ ĐƯỢC CẬP NHẬT *** -->
+                        <th:block th:if="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                            <!-- Sửa lại đường dẫn thành /book-uploads/ -->
+                            <th:block th:with="imageSrc=${#strings.startsWith(book.imageUrl, 'http') ? book.imageUrl : '/book-uploads/' + book.imageUrl}">
+                                <img th:src="${imageSrc}"
+                                     class="card-img-top"
+                                     th:alt="${book.title}"
+                                     style="height: 600px; object-fit: cover;"
+                                     onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                            </th:block>
+                        </th:block>
+                        <!-- Hiển thị ảnh mặc định nếu sách chưa có ảnh -->
+                        <th:block th:unless="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                            <img th:src="@{/images/placeholder.png}"
+                                 class="card-img-top"
+                                 alt="No Image Available"
+                                 style="height: 600px; object-fit: cover;">
+                        </th:block>
+                        <!-- *** KẾT THÚC CẬP NHẬT *** -->
 
                         <!-- Badges -->
                         <span class="badge bestseller-badge position-absolute top-0 start-0 m-3 fs-6"

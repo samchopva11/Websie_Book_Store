@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/header :: header" th:with="title='Thanh toán - BookHaven'"></head>
 <body>
 <!-- Navigation -->
@@ -153,10 +152,27 @@
                             <!-- Cart Items -->
                             <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
                                 <div class="d-flex mb-3 pb-3 border-bottom" th:each="item : ${cartItems}">
-                                    <img th:src="${item.book.imageUrl}"
-                                         alt="Book"
-                                         class="rounded me-2"
-                                         style="width: 60px; height: 75px; object-fit: cover;">
+
+                                    <!-- *** PHẦN HIỂN THỊ ẢNH ĐÃ ĐƯỢC CẬP NHẬT *** -->
+                                    <th:block th:with="book=${item.book}">
+                                        <th:block th:if="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                                            <th:block th:with="imageSrc=${#strings.startsWith(book.imageUrl, 'http') ? book.imageUrl : '/book-uploads/' + book.imageUrl}">
+                                                <img th:src="${imageSrc}"
+                                                     th:alt="${book.title}"
+                                                     class="rounded me-2"
+                                                     style="width: 60px; height: 75px; object-fit: cover;"
+                                                     onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                                            </th:block>
+                                        </th:block>
+                                        <th:block th:unless="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                                            <img th:src="@{/images/placeholder.png}"
+                                                 alt="No image"
+                                                 class="rounded me-2"
+                                                 style="width: 60px; height: 75px; object-fit: cover;">
+                                        </th:block>
+                                    </th:block>
+                                    <!-- *** KẾT THÚC CẬP NHẬT *** -->
+
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1" th:text="${item.book.title}">Book Title</h6>
                                         <small class="text-muted">

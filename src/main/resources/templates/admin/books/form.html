@@ -24,9 +24,11 @@
             <div th:replace="layout/header :: messages"></div>
 
             <!-- Form -->
+            <!-- *** THAY ĐỔI 1: Thêm enctype="multipart/form-data" để cho phép upload file *** -->
             <form th:action="@{/admin/books/save}"
                   method="post"
-                  th:object="${book}">
+                  th:object="${book}"
+                  enctype="multipart/form-data">
 
                 <input type="hidden" th:field="*{id}">
 
@@ -89,20 +91,55 @@
                                               placeholder="Mô tả chi tiết về sách..."></textarea>
                                 </div>
 
+                                <!-- *** THAY ĐỔI 2: Cập nhật phần thêm ảnh bìa *** -->
                                 <div class="mb-3">
-                                    <label for="imageUrl" class="form-label">
-                                        URL ảnh bìa <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="url"
-                                           class="form-control"
-                                           id="imageUrl"
-                                           th:field="*{imageUrl}"
-                                           placeholder="https://example.com/image.jpg"
-                                           required>
-                                    <small class="text-muted">
-                                        Dán URL ảnh từ Unsplash, Google Images, v.v.
-                                    </small>
+                                    <label class="form-label">Ảnh bìa <span class="text-danger">*</span></label>
+                                    <!-- Lựa chọn phương thức thêm ảnh -->
+                                    <div class="d-flex gap-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="imageSource" id="imageSourceUrl" value="url" checked>
+                                            <label class="form-check-label" for="imageSourceUrl">
+                                                Thêm từ URL
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="imageSource" id="imageSourceFile" value="file">
+                                            <label class="form-check-label" for="imageSourceFile">
+                                                Upload từ máy tính
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Trường nhập URL (hiện mặc định) -->
+                                    <div id="imageUrlGroup">
+                                        <label for="imageUrl" class="form-label visually-hidden">URL ảnh bìa</label>
+                                        <input type="url"
+                                               class="form-control"
+                                               id="imageUrl"
+                                               th:field="*{imageUrl}"
+                                               placeholder="https://example.com/image.jpg"
+                                               required>
+                                        <small class="text-muted">Dán URL ảnh từ Unsplash, Google Images, v.v.</small>
+                                    </div>
+
+                                    <!-- Trường upload file (ẩn mặc định) -->
+                                    <div id="imageFileGroup" style="display: none;">
+                                        <label for="imageFile" class="form-label visually-hidden">Tải ảnh lên</label>
+                                        <!-- Thêm một trường input mới cho file -->
+                                        <input type="file"
+                                               class="form-control"
+                                               id="imageFile"
+                                               name="imageFile"
+                                               accept="image/png, image/jpeg, image/gif">
+                                        <small class="text-muted">Chỉ chấp nhận file .png, .jpg, .gif.</small>
+                                    </div>
+                                    <!-- Hiển thị ảnh bìa hiện tại nếu đang chỉnh sửa -->
+                                    <div th:if="${isEdit and book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}" class="mt-3">
+                                        <label>Ảnh bìa hiện tại:</label><br>
+                                        <img th:src="*{imageUrl}" alt="Ảnh bìa" class="img-fluid img-thumbnail" style="max-width: 150px;">
+                                    </div>
                                 </div>
+                                <!-- *** KẾT THÚC THAY ĐỔI 2 *** -->
                             </div>
                         </div>
 
@@ -221,5 +258,56 @@
 </div>
 
 <div th:replace="layout/header :: scripts"></div>
+<!-- *** THAY ĐỔI 3: Thêm JavaScript để quản lý việc hiển thị các trường input ảnh *** -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const imageSourceRadios = document.querySelectorAll('input[name="imageSource"]');
+        const imageUrlGroup = document.getElementById('imageUrlGroup');
+        const imageFileGroup = document.getElementById('imageFileGroup');
+        const imageUrlInput = document.getElementById('imageUrl');
+        const imageFileInput = document.getElementById('imageFile');
+
+        // Lấy giá trị imageUrl hiện tại để xác định trạng thái ban đầu
+        const isEdit = [[${isEdit}]];
+        const currentImageUrl = imageUrlInput.value;
+
+        // Logic để xác định trạng thái ban đầu khi chỉnh sửa
+        if (isEdit && !currentImageUrl) {
+            // Nếu đang chỉnh sửa và không có imageUrl (có thể ảnh đã được upload từ file trước đó)
+            // Bạn có thể đặt mặc định là upload file, hoặc giữ nguyên URL
+        } else if (isEdit && currentImageUrl) {
+            // Mặc định chọn URL nếu đã có giá trị
+            document.getElementById('imageSourceUrl').checked = true;
+        }
+
+        function toggleImageInputs() {
+            if (document.getElementById('imageSourceUrl').checked) {
+                // Hiển thị trường URL, ẩn trường file
+                imageUrlGroup.style.display = 'block';
+                imageFileGroup.style.display = 'none';
+                // Đặt required cho URL và bỏ cho file
+                imageUrlInput.required = true;
+                imageFileInput.required = false;
+            } else {
+                // Hiển thị trường file, ẩn trường URL
+                imageUrlGroup.style.display = 'none';
+                imageFileGroup.style.display = 'block';
+                // Đặt required cho file và bỏ cho URL
+                // Nếu đang chỉnh sửa, không bắt buộc upload file mới
+                imageFileInput.required = !isEdit;
+                imageUrlInput.required = false;
+            }
+        }
+
+        // Gắn sự kiện 'change' cho các nút radio
+        imageSourceRadios.forEach(radio => {
+            radio.addEventListener('change', toggleImageInputs);
+        });
+
+        // Chạy hàm lần đầu để đảm bảo trạng thái đúng khi tải trang
+        toggleImageInputs();
+    });
+</script>
 </body>
 </html>
+

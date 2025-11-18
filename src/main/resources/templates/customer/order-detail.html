@@ -80,25 +80,36 @@
                                 <tr th:each="item : ${order.orderItems}">
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img th:if="${item.book != null}"
-                                                 th:src="${item.book.imageUrl}"
-                                                 alt="Book"
-                                                 class="rounded me-3"
-                                                 style="width: 60px; height: 75px; object-fit: cover;">
-                                            <div th:if="${item.book == null}"
-                                                 class="bg-secondary rounded d-flex align-items-center justify-content-center me-3"
-                                                 style="width: 60px; height: 75px;">
-                                                <i class="bi bi-book text-white"></i>
-                                            </div>
+
+                                            <!-- *** PHẦN HIỂN THỊ ẢNH ĐÃ ĐƯỢC CẬP NHẬT *** -->
+                                            <th:block th:with="imageUrl=${item.bookImageUrl}">
+                                                <th:block th:if="${imageUrl != null and not #strings.isEmpty(imageUrl)}">
+                                                    <th:block th:with="imageSrc=${#strings.startsWith(imageUrl, 'http') ? imageUrl : '/book-uploads/' + imageUrl}">
+                                                        <img th:src="${imageSrc}"
+                                                             th:alt="${item.bookTitle}"
+                                                             class="rounded me-3"
+                                                             style="width: 60px; height: 75px; object-fit: cover;"
+                                                             onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                                                    </th:block>
+                                                </th:block>
+                                                <th:block th:unless="${imageUrl != null and not #strings.isEmpty(imageUrl)}">
+                                                    <img th:src="@{/images/placeholder.png}"
+                                                         alt="No image"
+                                                         class="rounded me-3"
+                                                         style="width: 60px; height: 75px; object-fit: cover;">
+                                                </th:block>
+                                            </th:block>
+                                            <!-- *** KẾT THÚC CẬP NHẬT *** -->
+
                                             <div>
                                                 <h6 class="mb-0" th:text="${item.bookTitle}">Book Title</h6>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                                <span th:text="${#numbers.formatDecimal(item.bookPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
-                                                    299,000đ
-                                                </span>
+                                        <span th:text="${#numbers.formatDecimal(item.bookPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                            299,000đ
+                                        </span>
                                     </td>
                                     <td th:text="${item.quantity}">1</td>
                                     <td>

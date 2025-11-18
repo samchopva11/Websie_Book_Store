@@ -59,33 +59,48 @@
                             <thead class="table-light">
                             <tr>
                                 <th>ID</th>
-                                <th style= "width=80">Ảnh</th>
+                                <th style="width: 80px;">Ảnh</th>
                                 <th>Tên sách</th>
                                 <th>Tác giả</th>
                                 <th>Danh mục</th>
                                 <th>Giá</th>
                                 <th>Tồn kho</th>
-                                <th style= "width=150">Thao tác</th>
+                                <th style="width: 150px;">Thao tác</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="book : ${booksPage.content}">
                                 <td th:text="${book.id}">1</td>
                                 <td>
-                                    <img th:src="${book.imageUrl}"
-                                         alt="Book"
-                                         class="rounded"
-                                         style="width: 50px; height: 65px; object-fit: cover;">
+                                    <!-- *** PHẦN HIỂN THỊ ẢNH ĐÃ ĐƯỢC CẬP NHẬT *** -->
+                                    <th:block th:if="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                                        <!-- Sửa lại đường dẫn thành /book-uploads/ -->
+                                        <th:block th:with="imageSrc=${#strings.startsWith(book.imageUrl, 'http') ? book.imageUrl : '/book-uploads/' + book.imageUrl}">
+                                            <img th:src="${imageSrc}"
+                                                 th:alt="${book.title}"
+                                                 class="rounded"
+                                                 style="width: 50px; height: 65px; object-fit: cover;"
+                                                 onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                                        </th:block>
+                                    </th:block>
+                                    <!-- Thêm khối này để hiển thị ảnh mặc định nếu sách chưa có ảnh -->
+                                    <th:block th:unless="${book.imageUrl != null and not #strings.isEmpty(book.imageUrl)}">
+                                        <img th:src="@{/images/placeholder.png}"
+                                             alt="No image"
+                                             class="rounded"
+                                             style="width: 50px; height: 65px; object-fit: cover;">
+                                    </th:block>
+                                    <!-- *** KẾT THÚC CẬP NHẬT *** -->
                                 </td>
                                 <td>
                                     <strong th:text="${book.title}">Book Title</strong>
                                     <div>
-                                                <span class="badge bestseller-badge" th:if="${book.isBestseller}">
-                                                    <i class="bi bi-star-fill"></i> Sách bán chạy
-                                                </span>
-                                                <span class="badge bg-success" th:if="${book.isNew}">
-                                                    <i class="bi bi-fire"></i> Mới
-                                                </span>
+                                        <span class="badge bestseller-badge" th:if="${book.isBestseller}">
+                                            <i class="bi bi-star-fill"></i> Sách bán chạy
+                                        </span>
+                                        <span class="badge bg-success" th:if="${book.isNew}">
+                                            <i class="bi bi-fire"></i> Mới
+                                        </span>
                                     </div>
                                 </td>
                                 <td th:text="${book.author}">Author</td>
@@ -105,15 +120,15 @@
                                     </del>
                                 </td>
                                 <td>
-                                            <span th:if="${book.stock > 10}" class="badge bg-success">
-                                                <span th:text="${book.stock}">50</span>
-                                            </span>
+                                    <span th:if="${book.stock > 10}" class="badge bg-success">
+                                        <span th:text="${book.stock}">50</span>
+                                    </span>
                                     <span th:if="${book.stock > 0 and book.stock <= 10}" class="badge bg-warning">
-                                                <span th:text="${book.stock}">5</span>
-                                            </span>
+                                        <span th:text="${book.stock}">5</span>
+                                    </span>
                                     <span th:if="${book.stock == 0}" class="badge bg-danger">
-                                                Hết hàng
-                                            </span>
+                                        Hết hàng
+                                    </span>
                                 </td>
                                 <td>
                                     <a th:href="@{/admin/books/edit/{id}(id=${book.id})}"

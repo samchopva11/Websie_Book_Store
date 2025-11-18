@@ -40,7 +40,7 @@
             <div class="row">
                 <div class="col-12">
                     <!-- Orders List -->
-                    <div class="card" th:each="order : ${orders}">
+                    <div class="card mb-4" th:each="order : ${orders}">
                         <div class="card-header bg-light">
                             <div class="row align-items-center">
                                 <div class="col-md-3">
@@ -84,21 +84,32 @@
                         </div>
                         <div class="card-body">
                             <!-- Order Items -->
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col-md-8">
                                     <div class="d-flex mb-2" th:each="item : ${order.orderItems}">
+
+                                        <!-- *** PHẦN HIỂN THỊ ẢNH ĐÃ ĐƯỢC CẬP NHẬT *** -->
                                         <div class="flex-shrink-0 me-3">
-                                            <img th:if="${item.book != null}"
-                                                 th:src="${item.book.imageUrl}"
-                                                 alt="Book"
-                                                 class="rounded"
-                                                 style="width: 50px; height: 65px; object-fit: cover;">
-                                            <div th:if="${item.book == null}"
-                                                 class="bg-secondary rounded d-flex align-items-center justify-content-center"
-                                                 style="width: 50px; height: 65px;">
-                                                <i class="bi bi-book text-white"></i>
-                                            </div>
+                                            <th:block th:with="imageUrl=${item.bookImageUrl}">
+                                                <th:block th:if="${imageUrl != null and not #strings.isEmpty(imageUrl)}">
+                                                    <th:block th:with="imageSrc=${#strings.startsWith(imageUrl, 'http') ? imageUrl : '/book-uploads/' + imageUrl}">
+                                                        <img th:src="${imageSrc}"
+                                                             th:alt="${item.bookTitle}"
+                                                             class="rounded"
+                                                             style="width: 50px; height: 65px; object-fit: cover;"
+                                                             onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                                                    </th:block>
+                                                </th:block>
+                                                <th:block th:unless="${imageUrl != null and not #strings.isEmpty(imageUrl)}">
+                                                    <img th:src="@{/images/placeholder.png}"
+                                                         alt="No image"
+                                                         class="rounded"
+                                                         style="width: 50px; height: 65px; object-fit: cover;">
+                                                </th:block>
+                                            </th:block>
                                         </div>
+                                        <!-- *** KẾT THÚC CẬP NHẬT *** -->
+
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1" th:text="${item.bookTitle}">Book Title</h6>
                                             <small class="text-muted">
